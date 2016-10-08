@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Step by step: Connect Azure Vnet to an Existing AWS VPC powered by a StrongSwan instance.">
+  <meta name="generator" content="Hugo 0.17-DEV" />
+
+  <title>Connecting AWS VPC to Azure VNet using IPsec Tunnel &middot; Parth&#39;s Thoughts</title>
+
+  
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/pure-min.css">
+
+  <!--[if lte IE 8]>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/grids-responsive-old-ie-min.css">
+  <![endif]-->
+  <!--[if gt IE 8]><!-->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/grids-responsive-min.css">
+  <!--<![endif]-->
+
+  <!--[if lte IE 8]>
+  <link rel="stylesheet" href="https://parthbuch.com/blog/css/side-menu-old-ie.css">
+  <![endif]-->
+  <!--[if gt IE 8]><!-->
+  <link rel="stylesheet" href="https://parthbuch.com/blog/css/side-menu.css">
+  <!--<![endif]-->
+
+  <link rel="stylesheet" href="https://parthbuch.com/blog/css/blackburn.css">
+
+  
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+
+  
+  <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet" type="text/css">
+
+  
+  
+
+  
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/styles/androidstudio.min.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  
+
+  <link rel="shortcut icon" href="https://parthbuch.com/blog/img/favicon.ico" type="image/x-icon" />
+
+  
+    <link rel="stylesheet" href="https://parthbuch.com/blog/css/my.css">
+  
+  
+
+</head>
+
+
+<body>
+<div id="layout">
+
+  
+<a href="#menu" id="menuLink" class="menu-link">
+  
+  <span></span>
+</a>
+<div id="menu">
+
+  
+  <a class="pure-menu-heading brand" href="https://parthbuch.com/blog/">Parth Buch</a>
+
+
+  <div class="pure-menu">
+    <ul class="pure-menu-list">
+      
+      
+        <li class="pure-menu-item">
+          <a class="pure-menu-link" href="https://parthbuch.com"><i class='fa fa-home fa-fw'></i>Home</a>
+      
+        </li>
+      
+      
+        <li class="pure-menu-item">
+          <a class="pure-menu-link" href="https://parthbuch.com/blog/"><i class='fa fa-list fa-fw'></i>Blog</a>
+      
+        </li>
+      
+    </ul>
+  </div>
+
+  <div class="pure-menu social">
+  <ul class="pure-menu-list">
+
+    
+
+    
+
+    
+    <li class="pure-menu-item">
+      <a class="pure-menu-link" href="https://twitter.com/desidalek" target="_blank"><i class="fa fa-twitter-square fa-fw"></i>Twitter</a>
+    </li>
+    
+
+    
+
+    
+    <li class="pure-menu-item">
+      <a class="pure-menu-link" href="https://facebook.com/parthbuch115" target="_blank"><i class="fa fa-facebook-square fa-fw"></i>Facebook</a>
+    </li>
+    
+
+    
+
+    
+
+    
+
+    
+    <li class="pure-menu-item">
+      <a class="pure-menu-link" href="https://instagram.com/parth115" target="_blank"><i class="fa fa-instagram fa-fw"></i>Instagram</a>
+    </li>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <li class="pure-menu-item">
+      <a class="pure-menu-link" href="https://linkedin.com/in/parthbuch" target="_blank"><i class="fa fa-linkedin-square fa-fw"></i>LinkedIn</a>
+    </li>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <li class="pure-menu-item">
+      <a class="pure-menu-link" href="https://github.com/parth115" target="_blank"><i class="fa fa-github-square fa-fw"></i>GitHub</a>
+    </li>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+  </ul>
+</div>
+
+
+  <div>
+  <div class="small-print">
+    <small>&copy; 2016. All rights reserved.</small>
+  </div>
+  <div class="small-print">
+    <small>Built with&nbsp;<a href="https://gohugo.io/" target="_blank">Hugo</a></small>
+    <small>Theme&nbsp;<a href="https://github.com/yoshiharuyamashita/blackburn" target="_blank">Blackburn</a></small>
+  </div>
+</div>
+
+</div>
+
+
+  <div id="main">
+
+
+<div class="header">
+  <h1>Connecting AWS VPC to Azure VNet using IPsec Tunnel</h1>
+  <h2>Step by step: Connect Azure Vnet to an Existing AWS VPC powered by a StrongSwan instance.</h2>
+</div>
+<div class="content">
+
+  <div class="post-meta">
+
+  <div>
+    <i class="fa fa-calendar fa-fw"></i>
+    <time>08 Oct 2016, 23:20</time>
+  </div>
+
+  
+
+  
+  
+  
+  <div>
+    <i class="fa fa-folder fa-fw"></i>
+    
+      <a class="post-taxonomy-topic" href="https://parthbuch.com/blog/topics/amazon-aws">Amazon AWS</a>&nbsp;&#47;
+    
+      <a class="post-taxonomy-topic" href="https://parthbuch.com/blog/topics/microsoft-azure">Microsoft Azure</a>
+    
+  </div>
+  
+  
+
+  
+  
+  
+  <div>
+    <i class="fa fa-tags fa-fw"></i>
+    
+      <a class="post-taxonomy-tag" href="https://parthbuch.com/blog/tags/azure">azure</a>&nbsp;&#47;
+    
+      <a class="post-taxonomy-tag" href="https://parthbuch.com/blog/tags/aws">aws</a>&nbsp;&#47;
+    
+      <a class="post-taxonomy-tag" href="https://parthbuch.com/blog/tags/vpn">vpn</a>&nbsp;&#47;
+    
+      <a class="post-taxonomy-tag" href="https://parthbuch.com/blog/tags/ipsec">ipsec</a>&nbsp;&#47;
+    
+      <a class="post-taxonomy-tag" href="https://parthbuch.com/blog/tags/strongswan">strongswan</a>&nbsp;&#47;
+    
+      <a class="post-taxonomy-tag" href="https://parthbuch.com/blog/tags/vnet">vnet</a>&nbsp;&#47;
+    
+      <a class="post-taxonomy-tag" href="https://parthbuch.com/blog/tags/vpc">vpc</a>
+    
+  </div>
+  
+  
+
+</div>
+
+  
+
+<p>Here is how you can connect Amazon VPC to Azure VNet using a secure tunnel.</p>
+
+
+<img class="pure-img" src="https://parthbuch.com/blog/img/azure-aws-diagram.jpg" alt="">
+
+
+<p>Hi Folks,</p>
+
+<p>My current workplace is planning a migration from AWS to Azure.
+As we all know, migrating from one cloud provider with multiple servers to another provider is a complex task. In our case we wanted to move one environment at a time. This way we can move the whole stack for lets say TEST environment to Azure and validate our changes.</p>
+
+<p>In this blog post i will show how to create a site to site IPSec tunnel that connects VPC (Virtual Private Cloud) hosted in AWS to VNet (Virtual Network) in Azure. Using this setup we can have servers in both clouds have full connectivity over IPsec tunnel.</p>
+
+<p>We are a full Linux shop so we selected an Ubuntu running Strongswan as the point of tunel on the AWS side and Azure Virtual Gateway on Azure side.</p>
+
+<p>So lets get started&hellip;</p>
+
+<h3 id="setting-up-your-vpc">Setting up your VPC</h3>
+
+<p>If you already have a VPC setup, go ahead and skip this scetion.</p>
+
+<p>Using the AWS concolse, create a new vpc, i am going to use <code>172.30.0.0/16</code>:</p>
+
+<p><img src="https://parthbuch.com/blog/img/create-vpc.png" alt="Create new VPC" title="Create new VPC" /></p>
+
+<p>Create a new subnet in the given VPC. I am going to use <code>172.30.0.0/24</code>:</p>
+
+<p><img src="https://parthbuch.com/blog/img/create-subnet.png" alt="Create new VPC" title="Create new Subnet" /></p>
+
+<p>Then launch a new EC2 Ubuntu instance in the VPC and subnet created in step above :</p>
+
+<p>[image]</p>
+
+<p><strong>Disable source/destination checking on the instance</strong></p>
+
+<p>Now, by default a new instance launced in Subnet will get an public IP, If you have changed the default behaviour you will have to allocate a new Elastic IP address and associate it with the instance.</p>
+
+<p>Its usually a good idea to change or add the hostname of your EC2 instance to its <code>/etc/hosts</code> file as StrongSwan&rsquo;s ipsec command tries to look for the current instance&rsquo;s hostname:</p>
+
+<pre><code>vim /etc/hostname
+vim /etc/hosts
+sudo service hostname restart
+</code></pre>
+
+<h3 id="deploying-the-azure-vnet-and-gateway">Deploying the Azure VNet and Gateway</h3>
+
+<ul>
+<li>We are going to use the Resource Group deployment model. So go ahead and create a Resource group and name it as <strong>Azure2Aws</strong> :</li>
+</ul>
+
+<p>[image]</p>
+
+<ul>
+<li>Next add a Virtual Network (VNet) in the resource group :</li>
+</ul>
+
+<p>[image]</p>
+
+<ul>
+<li>Fill in the required details. For the Azure side of things i am going to create subnet in the address range of <code>172.40.0.0/24</code>. So that we donot have issue with the subnet on AWS side.</li>
+</ul>
+
+<p>[image]</p>
+
+<ul>
+<li>In the Virtual Network change the Gateway subnet to <code>172.40.200.0/29</code></li>
+</ul>
+
+<p>[image]</p>
+
+<ul>
+<li>Next add a Virtual Network Gateway in the resource Group</li>
+</ul>
+
+<p>[image]</p>
+
+<pre><code>Click create in the Virtual network gateway blade, fill in the info as below. (It may take upto 30 mins to allocate this gateway)
+</code></pre>
+
+<p>[image]</p>
+
+<pre><code>Note down the Public IP Address of the Virtual network Gateway. We will need it later.
+</code></pre>
+
+<p>[image]</p>
+
+<ul>
+<li>Next add a Local Network Gateway in <strong>Azure2Aws</strong>:</li>
+</ul>
+
+<p>[image]</p>
+
+<pre><code>Fill the information of AWS VPC (IP Address assigned to our strongswan server). Put `172.30.0.0/16` in the address space, this is the address space of our VPC 
+</code></pre>
+
+<p>[image]</p>
+
+<ul>
+<li>Wait till the Local network Gateway is created. Once it is created, in the settings of local network gateway create a new connection.</li>
+</ul>
+
+<p>[image]</p>
+
+<pre><code>Give ita a name `Azure2awsconnect`, attach the Virtual network gateway we created earlier. Add a secure PSK, DO NOT use  `abcde12345` in production environment.
+</code></pre>
+
+<p>[image]</p>
+
+<h3 id="setup-strongswan">Setup Strongswan</h3>
+
+<ul>
+<li>First install strongswan on your ubuntu instance
+<br /></li>
+</ul>
+
+<pre><code>sudo apt-get install update
+sudo apt-get install strongswan
+</code></pre>
+
+<ul>
+<li>Modify <code>/etc/strongswan/ipsec.conf</code> with these settings
+<br /></li>
+</ul>
+
+<pre><code>conn azure
+  authby=secret
+  type=tunnel
+  leftsendcert=never
+  left=[IP Address of this Server]
+  leftsubnet=172.30.0.0/16
+  right=[IP Address of Azure Gateway]
+  rightsubnet=172.40.0.0/24
+  keyexchange=ikev2
+  ikelifetime=10800s
+  keylife=57m
+  keyingtries=1
+  rekeymargin=3m
+  compress=no
+  auto=start
+</code></pre>
+
+<ul>
+<li><p>Here are the keys you should change for your specific deployment:</p>
+
+<ul>
+<li>left - The local ip address of the strongswan server</li>
+<li>leftsubnet - The local subnet of the VPC</li>
+<li>right - The public IP address of the Azure VNet Gateway</li>
+<li>rightsubnet - The local subnet of the Azure VNet (not to be confused with the gateway subnet)</li>
+</ul></li>
+
+<li><p>Now we need to configure StrongSwan with the shared secret key. Modify the file at <code>/etc/strongswan/ipsec.secrets</code> and add the line:</p></li>
+</ul>
+
+<p><code>[STRONGSWAN LOCAL IP] [AZURE VNET GATEWAY PUBLIC IP] : PSK &quot;[YOUR SHARED KEY]&quot;</code></p>
+
+<ul>
+<li><p>The shared key should be the same as one we gave in Local network Gateway connection.</p></li>
+
+<li><p>For the strong swan instance to forward traffic between Azure VNet and AWS VPC, we&rsquo;ll have to enable forwarding. On the EC2 instance, uncomment or add the following line to the file, /etc/sysctl.conf:</p>
+
+<pre><code>net.ipv4.ip_forward=1
+</code></pre></li>
+
+<li><p>Restart strongswan for changes to get reflected</p>
+
+<pre><code>sudo service strongswan restart
+</code></pre></li>
+</ul>
+
+
+  
+
+
+  
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+
+(function() {
+    
+    
+    if (window.location.hostname == "localhost")
+        return;
+
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    var disqus_shortname = 'parthbuch-com';
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com/" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+</div>
+
+</div>
+</div>
+<script src="https://parthbuch.com/blog/js/ui.js"></script>
+
+
+
+
+</body>
+</html>
+
