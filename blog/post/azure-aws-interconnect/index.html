@@ -292,11 +292,19 @@ As we all know, migrating from one cloud provider with multiple servers to anoth
 
 <p>Using the AWS concolse, create a new vpc, i am going to use <code>172.30.0.0/16</code>:</p>
 
-<p><img src="https://parthbuch.com/blog/img/create-vpc.png" alt="Create new VPC" title="Create new VPC" /></p>
+
+<div class="pure-u-1">
+  <img class="pure-img" src="https://parthbuch.com/blog/img/create-vpc.png" >
+</div>
+
 
 <p>Create a new subnet in the given VPC. I am going to use <code>172.30.0.0/24</code>:</p>
 
-<p><img src="https://parthbuch.com/blog/img/create-subnet.png" alt="Create new VPC" title="Create new Subnet" /></p>
+
+<div class="pure-u-1">
+  <img class="pure-img" src="https://parthbuch.com/blog/img/create-subnet.png" >
+</div>
+
 
 <p>Then launch a new EC2 Ubuntu instance in the VPC and subnet created in step above :</p>
 
@@ -444,8 +452,7 @@ sudo service hostname restart
 <h3 id="setup-strongswan">Setup Strongswan</h3>
 
 <ul>
-<li>First install strongswan on your ubuntu instance
-<br /></li>
+<li>First install strongswan on your ubuntu instance</li>
 </ul>
 
 <pre><code>sudo apt-get install update
@@ -453,8 +460,7 @@ sudo apt-get install strongswan
 </code></pre>
 
 <ul>
-<li>Modify <code>/etc/strongswan/ipsec.conf</code> with these settings
-<br /></li>
+<li>Modify <code>/etc/strongswan/ipsec.conf</code> with these settings</li>
 </ul>
 
 <pre><code>conn azure

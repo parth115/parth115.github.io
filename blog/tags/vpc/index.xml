@@ -40,11 +40,19 @@ As we all know, migrating from one cloud provider with multiple servers to anoth
 
 &lt;p&gt;Using the AWS concolse, create a new vpc, i am going to use &lt;code&gt;172.30.0.0/16&lt;/code&gt;:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;https://parthbuch.com/blog/img/create-vpc.png&#34; alt=&#34;Create new VPC&#34; title=&#34;Create new VPC&#34; /&gt;&lt;/p&gt;
+
+&lt;div class=&#34;pure-u-1&#34;&gt;
+  &lt;img class=&#34;pure-img&#34; src=&#34;https://parthbuch.com/blog/img/create-vpc.png&#34; &gt;
+&lt;/div&gt;
+
 
 &lt;p&gt;Create a new subnet in the given VPC. I am going to use &lt;code&gt;172.30.0.0/24&lt;/code&gt;:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;https://parthbuch.com/blog/img/create-subnet.png&#34; alt=&#34;Create new VPC&#34; title=&#34;Create new Subnet&#34; /&gt;&lt;/p&gt;
+
+&lt;div class=&#34;pure-u-1&#34;&gt;
+  &lt;img class=&#34;pure-img&#34; src=&#34;https://parthbuch.com/blog/img/create-subnet.png&#34; &gt;
+&lt;/div&gt;
+
 
 &lt;p&gt;Then launch a new EC2 Ubuntu instance in the VPC and subnet created in step above :&lt;/p&gt;
 
@@ -192,8 +200,7 @@ sudo service hostname restart
 &lt;h3 id=&#34;setup-strongswan&#34;&gt;Setup Strongswan&lt;/h3&gt;
 
 &lt;ul&gt;
-&lt;li&gt;First install strongswan on your ubuntu instance
-&lt;br /&gt;&lt;/li&gt;
+&lt;li&gt;First install strongswan on your ubuntu instance&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;pre&gt;&lt;code&gt;sudo apt-get install update
@@ -201,8 +208,7 @@ sudo apt-get install strongswan
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;ul&gt;
-&lt;li&gt;Modify &lt;code&gt;/etc/strongswan/ipsec.conf&lt;/code&gt; with these settings
-&lt;br /&gt;&lt;/li&gt;
+&lt;li&gt;Modify &lt;code&gt;/etc/strongswan/ipsec.conf&lt;/code&gt; with these settings&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;pre&gt;&lt;code&gt;conn azure
