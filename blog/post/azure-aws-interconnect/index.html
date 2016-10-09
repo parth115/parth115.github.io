@@ -281,7 +281,37 @@ As we all know, migrating from one cloud provider with multiple servers to anoth
 
 <p>Then launch a new EC2 Ubuntu instance in the VPC and subnet created in step above :</p>
 
-<p>[image]</p>
+<p>Click on Launch new instance :</p>
+
+
+<div class="pure-u-1-1">
+  <img class="pure-img" src="https://parthbuch.com/blog/img/create_instance_1.png" >
+</div>
+
+
+<p>Select Ubunt 16.04 LTS from the list :</p>
+
+
+<div class="pure-u-1-1">
+  <img class="pure-img" src="https://parthbuch.com/blog/img/create_instance_2.png" >
+</div>
+
+
+<p>Select the VPC we created above and check if Auto-assign IP is selected :</p>
+
+
+<div class="pure-u-1-1">
+  <img class="pure-img" src="https://parthbuch.com/blog/img/create_instance_3.png" >
+</div>
+
+
+<p>Copy the Public IP once the instance is launched, we will be using it in next steps:</p>
+
+
+<div class="pure-u-1-1">
+  <img class="pure-img" src="https://parthbuch.com/blog/img/create_instance_4.png" >
+</div>
+
 
 <p><strong>Disable source/destination checking on the instance</strong></p>
 
@@ -300,63 +330,97 @@ sudo service hostname restart
 <li>We are going to use the Resource Group deployment model. So go ahead and create a Resource group and name it as <strong>Azure2Aws</strong> :</li>
 </ul>
 
-<p>[image]</p>
+
+<div class="pure-u-1-1">
+  <img class="pure-img" src="https://parthbuch.com/blog/img/create_azure_1.png" >
+</div>
+
 
 <ul>
 <li>Next add a Virtual Network (VNet) in the resource group :</li>
 </ul>
 
-<p>[image]</p>
+
+<div class="pure-u-1-1">
+  <img class="pure-img" src="https://parthbuch.com/blog/img/create_azure_2.png" >
+</div>
+
 
 <ul>
 <li>Fill in the required details. For the Azure side of things i am going to create subnet in the address range of <code>172.40.0.0/24</code>. So that we donot have issue with the subnet on AWS side.</li>
 </ul>
 
-<p>[image]</p>
+
+<div class="pure-u-1-1">
+  <img class="pure-img" src="https://parthbuch.com/blog/img/create_azure_3.png" >
+</div>
+
 
 <ul>
 <li>In the Virtual Network change the Gateway subnet to <code>172.40.200.0/29</code></li>
 </ul>
 
-<p>[image]</p>
+
+<div class="pure-u-1-1">
+  <img class="pure-img" src="https://parthbuch.com/blog/img/create_azure_4.png" >
+</div>
+
 
 <ul>
 <li>Next add a Virtual Network Gateway in the resource Group</li>
 </ul>
 
-<p>[image]</p>
 
-<pre><code>Click create in the Virtual network gateway blade, fill in the info as below. (It may take upto 30 mins to allocate this gateway)
-</code></pre>
+<div class="pure-u-1-1">
+  <img class="pure-img" src="https://parthbuch.com/blog/img/create_azure_5.png" >
+</div>
 
-<p>[image]</p>
 
-<pre><code>Note down the Public IP Address of the Virtual network Gateway. We will need it later.
-</code></pre>
+<p>Click create in the Virtual network gateway blade, fill in the info as below. (It may take upto 30 mins to allocate this gateway)</p>
 
-<p>[image]</p>
+
+<div class="pure-u-1-1">
+  <img class="pure-img" src="https://parthbuch.com/blog/img/create_azure_6.png" >
+</div>
+
+
+<p>Note down the Public IP Address of the Virtual network Gateway. We will need it later.</p>
+
+
+<div class="pure-u-1-1">
+  <img class="pure-img" src="https://parthbuch.com/blog/img/create_azure_7.png" >
+</div>
+
 
 <ul>
 <li>Next add a Local Network Gateway in <strong>Azure2Aws</strong>:</li>
 </ul>
 
-<p>[image]</p>
 
-<pre><code>Fill the information of AWS VPC (IP Address assigned to our strongswan server). Put `172.30.0.0/16` in the address space, this is the address space of our VPC 
-</code></pre>
+<div class="pure-u-1-1">
+  <img class="pure-img" src="https://parthbuch.com/blog/img/create_azure_8.png" >
+</div>
 
-<p>[image]</p>
+
+<p>Fill the information of AWS VPC (IP Address assigned to our strongswan server). Put <code>172.30.0.0/16</code> in the address space, this is the address space of our VPC</p>
+
+
+<div class="pure-u-1-1">
+  <img class="pure-img" src="https://parthbuch.com/blog/img/create_azure_9.png" >
+</div>
+
 
 <ul>
 <li>Wait till the Local network Gateway is created. Once it is created, in the settings of local network gateway create a new connection.</li>
 </ul>
 
-<p>[image]</p>
 
-<pre><code>Give ita a name `Azure2awsconnect`, attach the Virtual network gateway we created earlier. Add a secure PSK, DO NOT use  `abcde12345` in production environment.
-</code></pre>
+<div class="pure-u-1-1">
+  <img class="pure-img" src="https://parthbuch.com/blog/img/create_azure_10.png" >
+</div>
 
-<p>[image]</p>
+
+<p>Give ita a name <code>Azure2awsconnect</code>, attach the Virtual network gateway we created earlier. Add a secure PSK, DO NOT use  <code>abcde12345</code> in production environment.</p>
 
 <h3 id="setup-strongswan">Setup Strongswan</h3>
 
@@ -419,6 +483,32 @@ sudo apt-get install strongswan
 <pre><code>sudo service strongswan restart
 </code></pre></li>
 </ul>
+
+<h3 id="testing-the-connection">Testing the Connection</h3>
+
+<p>We can test this connection by creating a VM in the Azure VNet and pinging it from our Strongswan server.</p>
+
+<p>Lets say the ip for the Azure VM is <code>172.40.0.5</code></p>
+
+<p>From the AWS instance try</p>
+
+<pre><code>ping 172.40.0.5
+64 bytes from 172.40.0.5: icmp_seq=892 ttl=62 time=26.1 ms
+64 bytes from 172.40.0.5: icmp_seq=893 ttl=62 time=26.2 ms
+64 bytes from 172.40.0.5: icmp_seq=894 ttl=62 time=25.8 ms
+...
+64 bytes from 172.40.0.5: icmp_seq=929 ttl=62 time=25.4 ms
+</code></pre>
+
+<p>You should see the same thing as well when you ping the the Azure instance to AWS</p>
+
+<pre><code>ping 172.30.0.10
+64 bytes from 172.30.0.10: icmp_seq=892 ttl=62 time=26.1 ms
+64 bytes from 172.30.0.10: icmp_seq=893 ttl=62 time=26.2 ms
+64 bytes from 172.30.0.10: icmp_seq=894 ttl=62 time=25.8 ms
+...
+64 bytes from 172.30.0.10: icmp_seq=929 ttl=62 time=25.4 ms
+</code></pre>
 
 
   
