@@ -194,11 +194,10 @@
 
 
 <div class="header">
+  <div class='title'>
   <h1>Connecting AWS VPC to Azure VNet using IPsec Tunnel</h1>
   <h2>Step by step: Connect Azure Vnet to an Existing AWS VPC powered by a StrongSwan instance.</h2>
-</div>
-<div class="content">
-
+  </div>
   <div class="post-meta">
 
   <div>
@@ -248,6 +247,26 @@
 
 </div>
 
+</div>
+<div class="content">
+  <div class='share-this'>
+    
+    <div class="a2a_kit a2a_kit_size_32 a2a_default_style">
+    <a class="a2a_dd" href="https://www.addtoany.com/share"></a>
+    <a class="a2a_button_facebook"></a>
+    <a class="a2a_button_twitter"></a>
+    <a class="a2a_button_google_plus"></a>
+    <a class="a2a_button_reddit"></a>
+    <a class="a2a_button_linkedin"></a>
+    <a class="a2a_button_whatsapp"></a>
+    <a class="a2a_button_blogger_post"></a>
+    <a class="a2a_button_buffer"></a>
+    <a class="a2a_button_pocket"></a>
+    <a class="a2a_button_email"></a>
+    </div>
+    
+  </div>
+
   
 
 <p>Here is how you can connect Amazon VPC to Azure VNet using a secure tunnel.</p>
@@ -284,7 +303,7 @@ As we all know, migrating from one cloud provider with multiple servers to anoth
 <p>Click on Launch new instance :</p>
 
 
-<div class="pure-u-1-1">
+<div class="pure-u-1">
   <img class="pure-img" src="https://parthbuch.com/blog/img/create_instance_1.png" >
 </div>
 
@@ -292,7 +311,7 @@ As we all know, migrating from one cloud provider with multiple servers to anoth
 <p>Select Ubunt 16.04 LTS from the list :</p>
 
 
-<div class="pure-u-1-1">
+<div class="pure-u-1">
   <img class="pure-img" src="https://parthbuch.com/blog/img/create_instance_2.png" >
 </div>
 
@@ -300,7 +319,7 @@ As we all know, migrating from one cloud provider with multiple servers to anoth
 <p>Select the VPC we created above and check if Auto-assign IP is selected :</p>
 
 
-<div class="pure-u-1-1">
+<div class="pure-u-1">
   <img class="pure-img" src="https://parthbuch.com/blog/img/create_instance_3.png" >
 </div>
 
@@ -308,7 +327,7 @@ As we all know, migrating from one cloud provider with multiple servers to anoth
 <p>Copy the Public IP once the instance is launched, we will be using it in next steps:</p>
 
 
-<div class="pure-u-1-1">
+<div class="pure-u-1">
   <img class="pure-img" src="https://parthbuch.com/blog/img/create_instance_4.png" >
 </div>
 
@@ -331,7 +350,7 @@ sudo service hostname restart
 </ul>
 
 
-<div class="pure-u-1-1">
+<div class="pure-u-1">
   <img class="pure-img" src="https://parthbuch.com/blog/img/create_azure_1.png" >
 </div>
 
@@ -341,7 +360,7 @@ sudo service hostname restart
 </ul>
 
 
-<div class="pure-u-1-1">
+<div class="pure-u-1">
   <img class="pure-img" src="https://parthbuch.com/blog/img/create_azure_2.png" >
 </div>
 
@@ -351,7 +370,7 @@ sudo service hostname restart
 </ul>
 
 
-<div class="pure-u-1-1">
+<div class="pure-u-1">
   <img class="pure-img" src="https://parthbuch.com/blog/img/create_azure_3.png" >
 </div>
 
@@ -361,7 +380,7 @@ sudo service hostname restart
 </ul>
 
 
-<div class="pure-u-1-1">
+<div class="pure-u-1">
   <img class="pure-img" src="https://parthbuch.com/blog/img/create_azure_4.png" >
 </div>
 
@@ -371,7 +390,7 @@ sudo service hostname restart
 </ul>
 
 
-<div class="pure-u-1-1">
+<div class="pure-u-1">
   <img class="pure-img" src="https://parthbuch.com/blog/img/create_azure_5.png" >
 </div>
 
@@ -379,7 +398,7 @@ sudo service hostname restart
 <p>Click create in the Virtual network gateway blade, fill in the info as below. (It may take upto 30 mins to allocate this gateway)</p>
 
 
-<div class="pure-u-1-1">
+<div class="pure-u-1">
   <img class="pure-img" src="https://parthbuch.com/blog/img/create_azure_6.png" >
 </div>
 
@@ -387,7 +406,7 @@ sudo service hostname restart
 <p>Note down the Public IP Address of the Virtual network Gateway. We will need it later.</p>
 
 
-<div class="pure-u-1-1">
+<div class="pure-u-1">
   <img class="pure-img" src="https://parthbuch.com/blog/img/create_azure_7.png" >
 </div>
 
@@ -397,7 +416,7 @@ sudo service hostname restart
 </ul>
 
 
-<div class="pure-u-1-1">
+<div class="pure-u-1">
   <img class="pure-img" src="https://parthbuch.com/blog/img/create_azure_8.png" >
 </div>
 
@@ -405,7 +424,7 @@ sudo service hostname restart
 <p>Fill the information of AWS VPC (IP Address assigned to our strongswan server). Put <code>172.30.0.0/16</code> in the address space, this is the address space of our VPC</p>
 
 
-<div class="pure-u-1-1">
+<div class="pure-u-1">
   <img class="pure-img" src="https://parthbuch.com/blog/img/create_azure_9.png" >
 </div>
 
@@ -415,7 +434,7 @@ sudo service hostname restart
 </ul>
 
 
-<div class="pure-u-1-1">
+<div class="pure-u-1">
   <img class="pure-img" src="https://parthbuch.com/blog/img/create_azure_10.png" >
 </div>
 
@@ -509,6 +528,24 @@ sudo apt-get install strongswan
 ...
 64 bytes from 172.30.0.10: icmp_seq=929 ttl=62 time=25.4 ms
 </code></pre>
+
+  <div class='share-this'>
+    
+    <div class="a2a_kit a2a_kit_size_32 a2a_default_style">
+    <a class="a2a_dd" href="https://www.addtoany.com/share"></a>
+    <a class="a2a_button_facebook"></a>
+    <a class="a2a_button_twitter"></a>
+    <a class="a2a_button_google_plus"></a>
+    <a class="a2a_button_reddit"></a>
+    <a class="a2a_button_linkedin"></a>
+    <a class="a2a_button_whatsapp"></a>
+    <a class="a2a_button_blogger_post"></a>
+    <a class="a2a_button_buffer"></a>
+    <a class="a2a_button_pocket"></a>
+    <a class="a2a_button_email"></a>
+    </div>
+  </div>
+<script async src="https://static.addtoany.com/menu/page.js"></script>
 
 
   

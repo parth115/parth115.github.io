@@ -1,1 +1,40 @@
 h1 { line-height: 1em}
+
+h2 {
+  font-size: 2em;
+  line-height: 1em;
+  }
+
+header {
+  position: relative;
+  display: flex;
+  border-bottom: 1px solid #eee;
+}
+
+.share-this{
+  margin: 1em auto;
+}
+.header {
+    position: relative;
+    display: flex;
+    padding: 0 1em 0 1em;
+}
+
+.header h2 {
+  font-size: 1.5em;
+  line-height: normal;
+}
+
+.title {
+    text-align: left;
+    border-right: 1px solid #eee;
+    padding-right: 1em;
+    margin-right: 1em;
+}
+
+.post-meta {
+    position: relative;
+    float: left;
+    padding: 2em 0em 0em 5em;
+    text-align: right;
+}
