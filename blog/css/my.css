@@ -1,38 +1,36 @@
-@media screen and (max-width: 980px) {
-  h1 { line-height: 1em}
+h1 { line-height: 1em}
 
-  h2 {
-    font-size: 2em;
-    line-height: 1em;
-    }
+h2 {
+  font-size: 2em;
+  line-height: 1em;
+  }
 
-  header {
+header {
+  position: relative;
+  display: flex;
+  border-bottom: 1px solid #eee;
+}
+.header {
+  position: relative;
+  display: flex;
+  padding: 0 1em 0 1em;
+}
+.header h2 {
+  font-size: 1.5em;
+  line-height: normal;
+}
+
+.title {
+    text-align: left;
+    border-right: 1px solid #eee;
+    padding-right: 1em;
+    margin-right: 1em;
+}
+.post-meta {
     position: relative;
-    display: flex;
-    border-bottom: 1px solid #eee;
-  }
-  .header {
-    position: relative;
-    display: flex;
-    padding: 0 1em 0 1em;
-  }
-  .header h2 {
-    font-size: 1.5em;
-    line-height: normal;
-  }
-
-  .title {
-      text-align: left;
-      border-right: 1px solid #eee;
-      padding-right: 1em;
-      margin-right: 1em;
-  }
-  .post-meta {
-      position: relative;
-      float: left;
-      padding: 2em 0em 0em 5em;
-      text-align: right;
-  }
+    float: left;
+    padding: 2em 0em 0em 5em;
+    text-align: right;
 }
 
 .share-this{
@@ -40,7 +38,14 @@
 }
 
 @media screen and (max-width: 480px){
+  header {
+    position: relative;
+    display: block;
+    border-bottom: 1px solid #eee;
+  }
+
   .title {
+    text-align: center;
     border: 0;
     padding: 0;
     margin: 0;
