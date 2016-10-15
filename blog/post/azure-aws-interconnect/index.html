@@ -273,6 +273,8 @@
 <img class="pure-img" src="https://parthbuch.com/blog/img/azure-aws-diagram.jpg" alt="">
 
 
+<p><strong>Updated: This blog post has been updated thanks to the comments of <a href="https://twitter.com/Thermi6">@Thermi6</a></strong></p>
+
 <p>Hi Folks,</p>
 
 <p>My current workplace is planning a migration from AWS to Azure.
@@ -447,6 +449,8 @@ sudo service hostname restart
 
 <p>Give ita a name <code>Azure2awsconnect</code>, attach the Virtual network gateway we created earlier. Add a secure PSK, DO NOT use  <code>abcde12345</code> in production environment.</p>
 
+<p><strong>Update: This blog post assumes that all your networking is in <code>172.30.0.0/16</code> subnet, Your AWS size is on <code>172.30.0.0/24</code> and Azure side is on <code>172.40.0.0/24</code>, if your network topology is different you may have to manually setup routes</strong></p>
+
 <h3 id="setup-strongswan">Setup Strongswan</h3>
 
 <ul>
@@ -475,8 +479,10 @@ sudo apt-get install strongswan
   keyingtries=1
   rekeymargin=3m
   compress=no
-  auto=start
+  auto=route
 </code></pre>
+
+<p><strong>Update: Old revision had <code>auto=start</code> changed it to <code>auto=route</code></strong></p>
 
 <ul>
 <li><p>Here are the keys you should change for your specific deployment:</p>
@@ -499,7 +505,9 @@ sudo apt-get install strongswan
 <li><p>For the strong swan instance to forward traffic between Azure VNet and AWS VPC, we&rsquo;ll have to enable forwarding. On the EC2 instance, uncomment or add the following line to the file, /etc/sysctl.conf:</p>
 
 <pre><code>net.ipv4.ip_forward=1
-</code></pre></li>
+</code></pre>
+
+<p><strong>Update : Depending on your kernel version, you might also have to add <code>net.ipv4.conf.all.rp_filter=2</code></strong></p></li>
 
 <li><p>Restart strongswan for changes to get reflected</p>
 

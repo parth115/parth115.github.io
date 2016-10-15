@@ -23,6 +23,8 @@
 &lt;img class=&#34;pure-img&#34; src=&#34;https://parthbuch.com/blog/img/azure-aws-diagram.jpg&#34; alt=&#34;&#34;&gt;
 
 
+&lt;p&gt;&lt;strong&gt;Updated: This blog post has been updated thanks to the comments of &lt;a href=&#34;https://twitter.com/Thermi6&#34;&gt;@Thermi6&lt;/a&gt;&lt;/strong&gt;&lt;/p&gt;
+
 &lt;p&gt;Hi Folks,&lt;/p&gt;
 
 &lt;p&gt;My current workplace is planning a migration from AWS to Azure.
@@ -197,6 +199,8 @@ sudo service hostname restart
 
 &lt;p&gt;Give ita a name &lt;code&gt;Azure2awsconnect&lt;/code&gt;, attach the Virtual network gateway we created earlier. Add a secure PSK, DO NOT use  &lt;code&gt;abcde12345&lt;/code&gt; in production environment.&lt;/p&gt;
 
+&lt;p&gt;&lt;strong&gt;Update: This blog post assumes that all your networking is in &lt;code&gt;172.30.0.0/16&lt;/code&gt; subnet, Your AWS size is on &lt;code&gt;172.30.0.0/24&lt;/code&gt; and Azure side is on &lt;code&gt;172.40.0.0/24&lt;/code&gt;, if your network topology is different you may have to manually setup routes&lt;/strong&gt;&lt;/p&gt;
+
 &lt;h3 id=&#34;setup-strongswan&#34;&gt;Setup Strongswan&lt;/h3&gt;
 
 &lt;ul&gt;
@@ -225,8 +229,10 @@ sudo apt-get install strongswan
   keyingtries=1
   rekeymargin=3m
   compress=no
-  auto=start
+  auto=route
 &lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;Update: Old revision had &lt;code&gt;auto=start&lt;/code&gt; changed it to &lt;code&gt;auto=route&lt;/code&gt;&lt;/strong&gt;&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;p&gt;Here are the keys you should change for your specific deployment:&lt;/p&gt;
@@ -249,7 +255,9 @@ sudo apt-get install strongswan
 &lt;li&gt;&lt;p&gt;For the strong swan instance to forward traffic between Azure VNet and AWS VPC, we&amp;rsquo;ll have to enable forwarding. On the EC2 instance, uncomment or add the following line to the file, /etc/sysctl.conf:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;net.ipv4.ip_forward=1
-&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;Update : Depending on your kernel version, you might also have to add &lt;code&gt;net.ipv4.conf.all.rp_filter=2&lt;/code&gt;&lt;/strong&gt;&lt;/p&gt;&lt;/li&gt;
 
 &lt;li&gt;&lt;p&gt;Restart strongswan for changes to get reflected&lt;/p&gt;
 
